@@ -5,7 +5,7 @@ resources:
   - ../../../apps/guestbook/base
 images:
   - name: ghcr.io/anatoliy-a/compdev26-guestbook
-    digest: sha256:f8f6c3301acc0f0f15674999556bdaf73bf2f4208651cd5f80433db0435faf61
+    digest: sha256:b8681a168812b93a17a4832894f9866b8580c5c142f5714190973079733b2fdc
 patches:
   - path: patches/serviceaccount.yaml
   - path: patches/configmap.yaml
