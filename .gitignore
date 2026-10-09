@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+kubeconfig
+rendered.yaml
+base.yaml

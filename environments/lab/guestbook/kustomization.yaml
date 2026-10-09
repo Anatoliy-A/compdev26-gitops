@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: guestbook
+resources:
+  - ../../../apps/guestbook/base
+images:
+  - name: ghcr.io/anatoliy-a/compdev26-guestbook
+    digest: sha256:650507b01013679b469855f819e0b2d7d79ae0c70f2b2074efba354035e553a4
+patches:
+  - path: patches/serviceaccount.yaml
+  - path: patches/configmap.yaml
+  - path: patches/httproute.yaml

@@ -1,0 +1,57 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Render lab overlay
+        run: kubectl kustomize environments/lab/guestbook > rendered.yaml
+
+      - name: Require digest-pinned images
+        run: |
+          if grep -E '^\s*image:' rendered.yaml | grep -v '@sha256:'; then
+            echo "Images above are not pinned by digest"
+            exit 1
+          fi
+
+      - name: Reject committed secrets
+        run: |
+          if grep -rEl --include='*.yaml' --include='*.yml' '^kind: Secret' . --exclude-dir=.git; then
+            echo "Kubernetes Secret manifests must not be committed"
+            exit 1
+          fi
+          if grep -rIl -E 'BEGIN [A-Z ]*PRIVATE KEY' . --exclude-dir=.git --exclude-dir=.github; then
+            echo "Private key material must not be committed"
+            exit 1
+          fi
+
+      - name: Show rendered difference
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git worktree add ../base "$BASE_SHA"
+          kubectl kustomize ../base/environments/lab/guestbook > base.yaml || : > base.yaml
+          {
+            echo '### Rendered difference'
+            echo '```diff'
+            diff -u base.yaml rendered.yaml || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

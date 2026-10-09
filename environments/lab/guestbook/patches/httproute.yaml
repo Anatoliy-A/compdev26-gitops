@@ -1,0 +1,11 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: guestbook
+spec:
+  parentRefs:
+    - name: shared-gateway
+      namespace: ingress-system
+      sectionName: https-lab-devoops-work
+  hostnames:
+    - lab.devoops.work

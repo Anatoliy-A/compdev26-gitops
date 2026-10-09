@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: guestbook-config
+data:
+  COSMOS_ENDPOINT: https://cosno-guestbook-s3b9.documents.azure.com:443/
+  COSMOS_DATABASE: guestbook
+  COSMOS_CONTAINER: entries
