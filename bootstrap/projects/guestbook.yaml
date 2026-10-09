@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: guestbook
+  namespace: argocd
+spec:
+  description: Guestbook workload in the lab cluster
+  sourceRepos:
+    - https://github.com/Anatoliy-A/compdev26-gitops.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: guestbook
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: ConfigMap
+    - group: ""
+      kind: Service
+    - group: ""
+      kind: ServiceAccount
+    - group: apps
+      kind: Deployment
+    - group: policy
+      kind: PodDisruptionBudget
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+  orphanedResources:
+    warn: true
+    ignore:
+      - group: ""
+        kind: ConfigMap
+        name: istio-ca-crl
+      - group: ""
+        kind: ConfigMap
+        name: istio-ca-root-cert

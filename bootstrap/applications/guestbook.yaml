@@ -4,7 +4,8 @@ metadata:
   name: guestbook
   namespace: argocd
 spec:
-  project: default
+  project: guestbook
+  revisionHistoryLimit: 5
   source:
     repoURL: https://github.com/Anatoliy-A/compdev26-gitops.git
     targetRevision: main
@@ -12,3 +13,17 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: guestbook
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PruneLast=true
+      - PrunePropagationPolicy=foreground
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
