@@ -28,7 +28,7 @@ The `guestbook` namespace is created by Terraform (`platform/`). Preview what Ar
 
 ## Update the image
 
-Take the digest from the `compdev26-guestbook` workflow summary and set it in `environments/lab/guestbook/kustomization.yaml`. Images must be pinned by digest, never by tag.
+The `compdev26-guestbook` workflow opens a pull request named `Deploy guestbook sha256:...` after each build of `main` or a `v*` tag. It changes only the digest in `environments/lab/guestbook/kustomization.yaml`. Review the `validate` result, merge it, and Argo CD rolls the image out. To roll back, revert the merge commit. To update by hand, set the digest from the workflow summary in the same file. Images must be pinned by digest, never by tag.
 
 ## Validation
 
