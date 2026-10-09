@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Anatoliy-A/compdev26-gitops.git
+    targetRevision: main
+    path: environments/lab/guestbook
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guestbook
