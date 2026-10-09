@@ -36,6 +36,8 @@ spec:
           labelSelector:
             matchLabels:
               app: guestbook
+          matchLabelKeys:
+            - pod-template-hash
       containers:
         - name: guestbook
           image: ghcr.io/anatoliy-a/compdev26-guestbook
